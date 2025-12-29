@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.felix.demo.common.mapper.GenericCrudMapper">
+
+    <sql id="commonWhere">
+        <choose>
+            <when test="spec.filters != null and spec.filters.size() > 0">
+                <where>
+                    <foreach collection="spec.filters" item="f">
+                        AND
+                        <choose>
+                            <when test="f.operator.name() == 'EQ'">
+                                ${f.field} = #{f.value}
+                            </when>
+                            <when test="f.operator.name() == 'NE'">
+                                ${f.field} != #{f.value}
+                            </when>
+                            <when test="f.operator.name() == 'GT'">
+                                ${f.field} &gt; #{f.value}
+                            </when>
+                            <when test="f.operator.name() == 'GE'">
+                                ${f.field} &gt;= #{f.value}
+                            </when>
+                            <when test="f.operator.name() == 'LT'">
+                                ${f.field} &lt; #{f.value}
+                            </when>
+                            <when test="f.operator.name() == 'LE'">
+                                ${f.field} &lt;= #{f.value}
+                            </when>
+                            <when test="f.operator.name() == 'LIKE'">
+                                ${f.field} LIKE CONCAT('%', #{f.value}, '%')
+                            </when>
+                        </choose>
+                    </foreach>
+                </where>
+            </when>
+            <otherwise>
+                <where>
+                    1 = 1
+                </where>
+            </otherwise>
+        </choose>
+    </sql>
+
+    <select id="selectPage" resultType="map">
+        SELECT
+        <choose>
+            <when test="spec.selectFields != null and spec.selectFields.size() > 0">
+                <foreach collection="spec.selectFields" item="f" separator=",">
+                    ${f}
+                </foreach>
+            </when>
+            <otherwise>
+                *
+            </otherwise>
+        </choose>
+        FROM ${table}
+
+        <include refid="commonWhere"/>
+
+        <if test="spec.sorts != null and spec.sorts.size() > 0">
+            ORDER BY
+            <foreach collection="spec.sorts" item="s" separator=",">
+                ${s.field}
+                <choose>
+                    <when test="s.asc">ASC</when>
+                    <otherwise>DESC</otherwise>
+                </choose>
+            </foreach>
+        </if>
+        <if test="offset != 0 or limit != 0">
+            LIMIT #{limit} OFFSET #{offset}
+        </if>
+    </select>
+
+
+    <select id="selectById" resultType="map">
+        SELECT * FROM ${table} WHERE id = #{id}
+    </select>
+
+    <insert id="insert">
+        INSERT INTO ${table}
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <foreach collection="data" index="key" item="value">
+                ${key},
+            </foreach>
+        </trim>
+        <trim prefix="VALUES (" suffix=")" suffixOverrides=",">
+            <foreach collection="data" index="key" item="value">
+                #{value},
+            </foreach>
+        </trim>
+    </insert>
+
+    <update id="update">
+        UPDATE ${table}
+        <set>
+            <foreach collection="data" item="value" index="key">
+                ${key} = #{value},
+            </foreach>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <delete id="delete">
+        DELETE FROM ${table} WHERE id = #{id}
+    </delete>
+
+    <select id="count" resultType="int">
+        SELECT COUNT(*)
+        FROM ${table}
+        <include refid="commonWhere"/>
+    </select>
+
+
+</mapper>

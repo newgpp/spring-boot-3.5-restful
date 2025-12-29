@@ -1,0 +1,103 @@
+### 全量查询年龄大于20岁按照年龄倒序排序的用户
+GET http://localhost:8080/api/v1/users?filter=age>20&sort=-age
+
+### 全量查询年龄大于20岁按照年龄倒序排序的用户，仅展示id、username、age字段
+GET http://localhost:8080/api/v1/users?filter=age>20&sort=-age&fields=id,username,age
+
+### 分页查询年龄大于20岁按照年龄倒序排序的用户
+GET http://localhost:8080/api/v1/users?filter=age>20&sort=-age&page=1&size=5
+
+### 查询id=1的用户
+GET http://localhost:8080/api/v1/users/1
+
+### 全量更新id=1的用户
+PUT http://127.0.0.1:8080/api/v1/users/1
+Content-Type: application/json
+
+{
+  "password": "pw1234561",
+  "create_time": "2025-01-10T10:00:01",
+  "ext_json": {
+    "role": "admin1",
+    "loginCount": 6
+  },
+  "id": 1,
+  "age": 2221,
+  "username": "zhangsan21"
+}
+
+### 部分更新id=1的用户
+PATCH http://127.0.0.1:8080/api/v1/users/1
+Content-Type: application/json
+
+{
+  "age": 221,
+  "username": "zhangsan1"
+}
+
+### 保存用户
+POST http://127.0.0.1:8080/api/v1/users
+Content-Type: application/json
+
+{
+  "password": "restful",
+  "create_time": "2025-12-20 10:00:00",
+  "ext_json": "{\"role\": \"admin\", \"loginCount\": 5}",
+  "age": 18,
+  "username": "restful"
+}
+
+### 查询保存用户
+GET http://localhost:8080/api/v1/users?filter=username=restful
+
+### 删除保存用户
+GET http://localhost:8080/api/v1/users?filter=username=restful
+
+
+### mongo-保存用户
+POST http://127.0.0.1:8080/api/v1/users
+Content-Type: application/json
+
+{
+  "password": "mongopwd1",
+  "create_time": "2025-06-12T14:10:05.444+00:00",
+  "ext_json": {"role": "admin1", "loginCount": 6},
+  "age": 18,
+  "username": "mongo1"
+}
+
+### mongo-查询id=1的用户
+GET http://localhost:8080/api/v1/users/694cec36d548e0efe42bee91
+
+### mongo-部分更新id=1的用户
+PATCH http://127.0.0.1:8080/api/v1/users/694cec36d548e0efe42bee91
+Content-Type: application/json
+
+{
+  "age": 221,
+  "username": "mongo1"
+}
+
+### mongo-查询保存用户
+GET http://localhost:8080/api/v1/users?filter=username=mongo1
+
+### mongo-删除保存用户
+DELETE http://localhost:8080/api/v1/users/694cae517118f239ef004930
+
+### mongo-更新用户
+POST http://127.0.0.1:8080/api/v1/users
+Content-Type: application/json
+
+{
+  "password": "hello2025",
+  "create_time": "2025-06-12T22:10:06.444",
+  "ext_json": {
+    "theme": "dark",
+    "lang": "zh-CN"
+  },
+  "age": 21,
+  "username": "zhoujiu"
+}
+
+### mongo-查询保存用户
+GET http://localhost:8080/api/v1/users/69522c2ce6dad15123095df5
