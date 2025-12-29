@@ -1,24 +1,19 @@
 package com.felix.demo.executor;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.stereotype.Service;
+
 import com.felix.demo.common.mapper.GenericCrudMapper;
 import com.felix.demo.common.vo.PageResult;
 import com.felix.demo.executor.convertor.TypeConvertor;
 import com.felix.demo.schema.db.FieldSchema;
 import com.felix.demo.schema.restful.QuerySpec;
 import com.felix.demo.schema.restful.ResourceSchema;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.stereotype.Service;
-
-import java.sql.Timestamp;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import static java.lang.Boolean.parseBoolean;
-import static org.springframework.util.NumberUtils.parseNumber;
 
 @Service
 @ConditionalOnProperty(name = "app.datasource", havingValue = "mysql")

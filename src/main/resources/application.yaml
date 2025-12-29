@@ -2,4 +2,4 @@ spring:
   application:
     name: restful
   profiles:
-    active: mysql
+    active: mongo
