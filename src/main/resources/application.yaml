@@ -2,4 +2,7 @@ spring:
   application:
     name: restful
   profiles:
-    active: mongo
+    active: mysql
+
+server:
+  port: 10042

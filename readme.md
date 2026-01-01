@@ -1,10 +1,28 @@
+#### 创建docker网络
+
+```shell
+docker network create infra-net
+```
+
 #### mysql测试数据
 
 ```shell
-docker run --name my-mariadb -p 3310:3306 -e MYSQL_ROOT_PASSWORD=123456 -d mariadb:latest. 
+docker run -d \
+  --name mariadb \
+  --network infra-net \
+  --restart unless-stopped \
+  -p 3306:3306 \
+  -e MYSQL_ROOT_PASSWORD=123456 \
+  -v /data/mariadb:/var/lib/mysql \
+  mariadb:10.11
+
+
 ```
 
 ```sql
+CREATE DATABASE IF NOT EXISTS `test`;
+USE `test`;
+
 CREATE TABLE `t_user` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '用户ID',
   `username` varchar(50) DEFAULT NULL COMMENT '用户名',
@@ -37,11 +55,20 @@ INSERT INTO `t_user` (`username`, `password`, `age`, `ext_json`, `create_time`) 
 #### mongo测试数据
 
 ```shell
-docker run -d --name mongodb-7 -p 27017:27017 -e MONGO_INITDB_ROOT_USERNAME=root -e MONGO_INITDB_ROOT_PASSWORD=123456 mongodb/mongodb-community-server:7.0-ubuntu2204
+docker run -d \
+  --name mongodb \
+  --network infra-net \
+  --restart unless-stopped \
+  -p 27017:27017 \
+  -e MONGO_INITDB_ROOT_USERNAME=root \
+  -e MONGO_INITDB_ROOT_PASSWORD=123456 \
+  -v /data/mongodb:/data/db \
+  mongodb/mongodb-community-server:7.0-ubuntu2204
+
 ```
 
 ```javascript
-db.createCollection("t_user");
+use test;
 db.t_user.insertMany([
   { "username": "zhangsan", "password": "pw123456", "age": 22, "ext_json": {"role": "admin", "loginCount": 5}, "create_time": ISODate("2025-01-10T10:00:00.000+08:00") },
   { "username": "lisi", "password": "abc888", "age": 25, "ext_json": {"dept": "Sales", "tags": ["active", "top"]}, "create_time": ISODate("2025-01-12T11:30:15.500+08:00") },
@@ -59,6 +86,21 @@ db.t_user.insertMany([
   { "username": "spiderman", "password": "peterP", "age": 18, "ext_json": {"school": "Midtown High", "powers": ["web", "climb"]}, "create_time": ISODate("2025-12-15T15:55:55.555+08:00") },
   { "username": "batman", "password": "wayne1", "age": 38, "ext_json": {"city": "Gotham", "rich": true}, "create_time": ISODate("2025-12-23T18:30:00.000+08:00") }
 ]);
+```
+
+#### docker构建&启动
+
+```shell
+# 构建
+docker build -t restful:1.0 .
+
+# 启动
+docker run -d \
+  --name restful \
+  --network infra-net \
+  -p 10042:10042 \
+  restful:1.0
+
 ```
 
 #### 常用测试用例
