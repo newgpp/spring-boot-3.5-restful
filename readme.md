@@ -13,7 +13,7 @@ docker run -d \
   --restart unless-stopped \
   -p 3306:3306 \
   -e MYSQL_ROOT_PASSWORD=123456 \
-  -v /data/mariadb:/var/lib/mysql \
+  -v mariadb-data:/var/lib/mysql \
   mariadb:10.11
 
 
@@ -62,13 +62,13 @@ docker run -d \
   -p 27017:27017 \
   -e MONGO_INITDB_ROOT_USERNAME=root \
   -e MONGO_INITDB_ROOT_PASSWORD=123456 \
-  -v /data/mongodb:/data/db \
+  -v mongodb-data:/data/db \
   mongodb/mongodb-community-server:7.0-ubuntu2204
 
 ```
 
 ```javascript
-use test;
+use test
 db.t_user.insertMany([
   { "username": "zhangsan", "password": "pw123456", "age": 22, "ext_json": {"role": "admin", "loginCount": 5}, "create_time": ISODate("2025-01-10T10:00:00.000+08:00") },
   { "username": "lisi", "password": "abc888", "age": 25, "ext_json": {"dept": "Sales", "tags": ["active", "top"]}, "create_time": ISODate("2025-01-12T11:30:15.500+08:00") },
@@ -85,7 +85,7 @@ db.t_user.insertMany([
   { "username": "ironman", "password": "stark1", "age": 45, "ext_json": {"suit": "Mark 85", "hero": true}, "create_time": ISODate("2025-12-01T09:00:00.000+08:00") },
   { "username": "spiderman", "password": "peterP", "age": 18, "ext_json": {"school": "Midtown High", "powers": ["web", "climb"]}, "create_time": ISODate("2025-12-15T15:55:55.555+08:00") },
   { "username": "batman", "password": "wayne1", "age": 38, "ext_json": {"city": "Gotham", "rich": true}, "create_time": ISODate("2025-12-23T18:30:00.000+08:00") }
-]);
+])
 ```
 
 #### docker构建&启动
