@@ -63,8 +63,7 @@ docker run -d \
   -e MONGO_INITDB_ROOT_USERNAME=root \
   -e MONGO_INITDB_ROOT_PASSWORD=123456 \
   -v mongodb-data:/data/db \
-  -v mongodb-config:/data/configdb \
-  mongodb/mongodb-community-server:7.0-ubuntu2204
+  mongo:7.0
 
 
 ```
